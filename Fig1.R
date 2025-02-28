@@ -42,7 +42,7 @@ max_disc_rpart <- merged_rpart |>
   mutate(model = "rpart")
 
 max_disc_svm <- merged_svm |> 
-  select(model, dataset, default, discrepancy) |>
+  select(dataset, default, discrepancy) |>
   filter(default == FALSE) |>
   group_by(dataset) |>
   summarise(max_disc = max(discrepancy)) |>
@@ -65,8 +65,7 @@ disc <- rbind(max_disc_glmnet,
 
 ggplot(disc, aes(x = fct_reorder(model, max_disc),
                  y = max_disc)) + 
-  geom_boxplot(size        = 1,
-               staplewidth = 0.5) + 
+  geom_boxplot(staplewidth = 0.5) + 
   scale_y_continuous(limits = c(0, 1),
                      labels = scales::number_format(accuracy = 0.01)) +
   scale_x_discrete(labels = c("svm"    = "Support \nVector \nMachines ", 
@@ -79,8 +78,7 @@ ggplot(disc, aes(x = fct_reorder(model, max_disc),
        y = "discrepancy") +
   coord_flip() +
   theme_bw() + 
-  theme(text = element_text(size = 25, 
-                            face = "bold"),
+  theme(text = element_text(size = 20),
         axis.ticks.length.y = unit(0, "cm"),
         panel.grid.major.y  = element_blank(), 
         panel.grid.minor.y  = element_blank())
