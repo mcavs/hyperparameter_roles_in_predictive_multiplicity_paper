@@ -44,22 +44,20 @@ merge_csv <- function(folder_path) {
 # merged_data <- merge_csv(path)
 # head(merged_data)
 
-setwd("/Volumes/LaCie/Multiplicibility/merged_csv")
-
-merged_rpart <- merge_csv("/Volumes/LaCie/Multiplicibility/csv/csv_rpart")
+merged_rpart <- merge_csv("https://github.com/mcavs/multiplicity/tree/main/csv/rpart")
 write_csv(merged_rpart, "merged_rpart.csv")
 
-merged_ranger <- merge_csv("/Volumes/LaCie/Multiplicibility/csv/csv_ranger")
+merged_ranger <- merge_csv("https://github.com/mcavs/multiplicity/tree/main/csv/ranger")
 write_csv(merged_ranger, "merged_ranger.csv")
 
-merged_svm <- merge_csv("/Volumes/LaCie/Multiplicibility/csv/csv_svm")
+merged_svm <- merge_csv("https://github.com/mcavs/multiplicity/tree/main/csv/svm")
 write_csv(merged_svm, "merged_svm.csv")
 
-merged_xgb <- merge_csv("/Volumes/LaCie/Multiplicibility/csv/csv_xgb")
+merged_xgb <- merge_csv("https://github.com/mcavs/multiplicity/tree/main/csv/xgb")
 write_csv(merged_xgb, "merged_xgb.csv")
 
-merged_glmnet <- merge_csv("/Volumes/LaCie/Multiplicibility/csv/csv_glmnet")
+merged_glmnet <- merge_csv("https://github.com/mcavs/multiplicity/tree/main/csv/glmnet")
 write_csv(merged_glmnet, "merged_glmnet.csv")
 
-merged_knn <- merge_csv("/Volumes/LaCie/Multiplicibility/csv/csv_knn")
+merged_knn <- merge_csv("https://github.com/mcavs/multiplicity/tree/main/csv/knn")
 write_csv(merged_knn, "merged_knn.csv")
