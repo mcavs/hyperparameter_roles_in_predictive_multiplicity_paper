@@ -3,8 +3,12 @@
 library(ggplot2)
 library(readr)
 library(forcats)
+library(extrafont)
+library(dplyr)
 
-setwd("/Volumes/LaCie/Multiplicibility/merged_csv")
+font_import(pattern = "cm")
+
+setwd("/cloud/project")
 
 merged_glmnet <- read_csv("merged_glmnet.csv")
 merged_knn    <- read_csv("merged_knn.csv")
@@ -14,28 +18,28 @@ merged_svm    <- read_csv("merged_svm.csv")
 merged_xgb    <- read_csv("merged_xgb.csv")
 
 max_disc_glmnet <- merged_glmnet |> 
-  select(model, dataset, default, discrepancy) |>
+  select(dataset, default, discrepancy) |>
   filter(default == FALSE) |>
   group_by(dataset) |>
   summarise(max_disc = max(discrepancy)) |>
   mutate(model = "glmnet")
 
 max_disc_knn <- merged_knn |> 
-  select(model, dataset, default, discrepancy) |>
+  select(dataset, default, discrepancy) |>
   filter(default == FALSE) |>
   group_by(dataset) |>
   summarise(max_disc = max(discrepancy)) |>
   mutate(model = "knn")
 
 max_disc_ranger <- merged_ranger |> 
-  select(model, dataset, default, discrepancy) |>
+  select(dataset, default, discrepancy) |>
   filter(default == FALSE) |>
   group_by(dataset) |>
   summarise(max_disc = max(discrepancy)) |>
   mutate(model = "ranger")
 
 max_disc_rpart <- merged_rpart |> 
-  select(model, dataset, default, discrepancy) |>
+  select(dataset, default, discrepancy) |>
   filter(default == FALSE) |>
   group_by(dataset) |>
   summarise(max_disc = max(discrepancy)) |>
@@ -49,7 +53,7 @@ max_disc_svm <- merged_svm |>
   mutate(model = "svm")
 
 max_disc_xgb <- merged_xgb |> 
-  select(model, dataset, default, discrepancy) |>
+  select(dataset, default, discrepancy) |>
   filter(default == FALSE) |>
   group_by(dataset) |>
   summarise(max_disc = max(discrepancy)) |>
@@ -78,7 +82,8 @@ ggplot(disc, aes(x = fct_reorder(model, max_disc),
        y = "discrepancy") +
   coord_flip() +
   theme_bw() + 
-  theme(text = element_text(size = 20),
+  theme(text = element_text(size   = 20,
+                            family = "LM Roman 10"),
         axis.ticks.length.y = unit(0, "cm"),
         panel.grid.major.y  = element_blank(), 
         panel.grid.minor.y  = element_blank())

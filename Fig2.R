@@ -8,7 +8,6 @@ library(scales)
 library(ggpubr)
 
 setwd("/Volumes/LaCie/Multiplicibility/merged_csv")
-
 merged_glmnet <- read_csv("merged_glmnet.csv")
 merged_knn    <- read_csv("merged_knn.csv")
 merged_ranger <- read_csv("merged_ranger.csv")
@@ -20,7 +19,7 @@ merged_xgb    <- read_csv("merged_xgb.csv")
 # glmnet #######################################################################
 # alpha
 glmnet_alpha <- merged_glmnet |> 
-  select(model, lambda, alpha, discrepancy, dataset, default) |>
+  select(lambda, alpha, discrepancy, dataset, default) |>
   filter(lambda == merged_glmnet$lambda[which(merged_glmnet$default == TRUE)[1]]) |>
   group_by(dataset) |>
   summarise(max_disc = max(discrepancy, na.rm = TRUE)) |> 
@@ -30,7 +29,7 @@ glmnet_alpha <- merged_glmnet |>
 
 # lambda
 glmnet_lambda <- merged_glmnet |> 
-  select(model, lambda, alpha, discrepancy, dataset, default) |>
+  select(lambda, alpha, discrepancy, dataset, default) |>
   filter(alpha == merged_glmnet$alpha[which(merged_glmnet$default == TRUE)[1]]) |>
   group_by(dataset) |>
   summarise(max_disc = max(discrepancy, na.rm = TRUE)) |> 
@@ -52,11 +51,16 @@ plot_glmnet <- ggplot(glmnet_disc,
   facet_grid(~ model) + 
   theme_bw() + 
   theme(legend.position = "none",
-        text = element_text(size = 20)) 
+        text = element_text(size = 20,
+                            family = "LM Roman 10"),
+        axis.text.x = element_text(family = "Courier",
+                                   size   = 10, 
+                                   angle  = 45, 
+                                   hjust  = 1)) 
 
 # knn ##########################################################################
 knn_k <- merged_knn |> 
-  select(model, k, discrepancy, dataset, default) |>
+  select(k, discrepancy, dataset, default) |>
   filter(default == FALSE) |>
   group_by(dataset) |>
   summarise(max_disc = max(discrepancy, na.rm = TRUE)) |> 
@@ -74,12 +78,17 @@ plot_knn <- ggplot(knn_k, aes(x = fct_reorder(parameter, -max_disc), y = max_dis
   facet_grid(~ model) + 
   theme_bw() + 
   theme(legend.position = "none",
-        text = element_text(size = 20)) 
+        text = element_text(size = 20,
+                            family = "LM Roman 10"),
+        axis.text.x = element_text(family = "Courier",
+                                   size   = 10, 
+                                   angle  = 45, 
+                                   hjust  = 1))
 
 # rpart ########################################################################
 # cp
 rpart_cp <- merged_rpart |> 
-  select(model, cp, maxdepth, minsplit, minbucket, discrepancy, dataset, default) |>
+  select(cp, maxdepth, minsplit, minbucket, discrepancy, dataset, default) |>
   filter(maxdepth  == merged_rpart$maxdepth[which(merged_rpart$default  == TRUE)[1]],
          minsplit  == merged_rpart$minsplit[which(merged_rpart$default  == TRUE)[1]],
          minbucket == merged_rpart$minbucket[which(merged_rpart$default == TRUE)[1]]) |>
@@ -91,7 +100,7 @@ rpart_cp <- merged_rpart |>
 
 # maxdepth
 rpart_maxdepth <- merged_rpart |> 
-  select(model, cp, maxdepth, minsplit, minbucket, discrepancy, dataset, default) |>
+  select(cp, maxdepth, minsplit, minbucket, discrepancy, dataset, default) |>
   filter(cp        == merged_rpart$cp[which(merged_rpart$default  == TRUE)[1]],
          minsplit  == merged_rpart$minsplit[which(merged_rpart$default  == TRUE)[1]],
          minbucket == merged_rpart$minbucket[which(merged_rpart$default == TRUE)[1]]) |>
@@ -103,7 +112,7 @@ rpart_maxdepth <- merged_rpart |>
 
 # minsplit
 rpart_minsplit <- merged_rpart |> 
-  select(model, cp, maxdepth, minsplit, minbucket, discrepancy, dataset, default) |>
+  select(cp, maxdepth, minsplit, minbucket, discrepancy, dataset, default) |>
   filter(cp        == merged_rpart$cp[which(merged_rpart$default  == TRUE)[1]],
          maxdepth  == merged_rpart$maxdepth[which(merged_rpart$default  == TRUE)[1]],
          minbucket == merged_rpart$minbucket[which(merged_rpart$default == TRUE)[1]]) |>
@@ -115,7 +124,7 @@ rpart_minsplit <- merged_rpart |>
 
 # minbucket
 rpart_minbucket <- merged_rpart |> 
-  select(model, cp, maxdepth, minsplit, minbucket, discrepancy, dataset, default) |>
+  select(cp, maxdepth, minsplit, minbucket, discrepancy, dataset, default) |>
   filter(cp        == merged_rpart$cp[which(merged_rpart$default  == TRUE)[1]],
          maxdepth  == merged_rpart$maxdepth[which(merged_rpart$default  == TRUE)[1]],
          minsplit  == merged_rpart$minsplit[which(merged_rpart$default == TRUE)[1]]) |>
@@ -137,12 +146,17 @@ plot_rpart <- ggplot(rpart_disc, aes(x = fct_reorder(parameter, -max_disc), y = 
   facet_grid(~ model) + 
   theme_bw() + 
   theme(legend.position = "none",
-        text = element_text(size = 20)) 
+        text = element_text(size = 20,
+                            family = "LM Roman 10"),
+        axis.text.x = element_text(family = "Courier",
+                                   size   = 10, 
+                                   angle  = 45, 
+                                   hjust  = 1))
 
 # xgb ##########################################################################
 # eta
 xgb_eta <- merged_xgb |> 
-  select(model, eta, subsample, max_depth, min_child_weight, colsample_bytree, colsample_bylevel,
+  select(eta, subsample, max_depth, min_child_weight, colsample_bytree, colsample_bylevel,
          alpha, lambda, discrepancy, dataset, default) |>
   filter(subsample         == merged_xgb$subsample[which(merged_xgb$default  == TRUE)[1]],
          max_depth         == merged_xgb$max_depth[which(merged_xgb$default  == TRUE)[1]],
@@ -159,7 +173,7 @@ xgb_eta <- merged_xgb |>
 
 # subsample
 xgb_subsample <- merged_xgb |> 
-  select(model, eta, subsample, max_depth, min_child_weight, colsample_bytree, colsample_bylevel,
+  select(eta, subsample, max_depth, min_child_weight, colsample_bytree, colsample_bylevel,
          alpha, lambda, discrepancy, dataset, default) |>
   filter(eta               == merged_xgb$eta[which(merged_xgb$default  == TRUE)[1]],
          max_depth         == merged_xgb$max_depth[which(merged_xgb$default  == TRUE)[1]],
@@ -176,7 +190,7 @@ xgb_subsample <- merged_xgb |>
 
 # max_depth
 xgb_max_depth <- merged_xgb |> 
-  select(model, eta, subsample, max_depth, min_child_weight, colsample_bytree, colsample_bylevel,
+  select(eta, subsample, max_depth, min_child_weight, colsample_bytree, colsample_bylevel,
          alpha, lambda, discrepancy, dataset, default) |>
   filter(eta               == merged_xgb$eta[which(merged_xgb$default  == TRUE)[1]],
          subsample         == merged_xgb$subsample[which(merged_xgb$default  == TRUE)[1]],
@@ -193,7 +207,7 @@ xgb_max_depth <- merged_xgb |>
 
 # min_child_weight
 xgb_min_child_weight <- merged_xgb |> 
-  select(model, eta, subsample, max_depth, min_child_weight, colsample_bytree, colsample_bylevel,
+  select(eta, subsample, max_depth, min_child_weight, colsample_bytree, colsample_bylevel,
          alpha, lambda, discrepancy, dataset, default) |>
   filter(eta               == merged_xgb$eta[which(merged_xgb$default  == TRUE)[1]],
          subsample         == merged_xgb$subsample[which(merged_xgb$default  == TRUE)[1]],
@@ -210,7 +224,7 @@ xgb_min_child_weight <- merged_xgb |>
 
 # colsample_bytree
 xgb_colsample_bytree <- merged_xgb |> 
-  select(model, eta, subsample, max_depth, min_child_weight, colsample_bytree, colsample_bylevel,
+  select(eta, subsample, max_depth, min_child_weight, colsample_bytree, colsample_bylevel,
          alpha, lambda, discrepancy, dataset, default) |>
   filter(eta               == merged_xgb$eta[which(merged_xgb$default  == TRUE)[1]],
          subsample         == merged_xgb$subsample[which(merged_xgb$default  == TRUE)[1]],
@@ -227,7 +241,7 @@ xgb_colsample_bytree <- merged_xgb |>
 
 # colsample_bylevel
 xgb_colsample_bylevel <- merged_xgb |> 
-  select(model, eta, subsample, max_depth, min_child_weight, colsample_bytree, colsample_bylevel,
+  select(eta, subsample, max_depth, min_child_weight, colsample_bytree, colsample_bylevel,
          alpha, lambda, discrepancy, dataset, default) |>
   filter(eta               == merged_xgb$eta[which(merged_xgb$default  == TRUE)[1]],
          subsample         == merged_xgb$subsample[which(merged_xgb$default  == TRUE)[1]],
@@ -244,7 +258,7 @@ xgb_colsample_bylevel <- merged_xgb |>
 
 # alpha
 xgb_alpha <- merged_xgb |> 
-  select(model, eta, subsample, max_depth, min_child_weight, colsample_bytree, colsample_bylevel,
+  select(eta, subsample, max_depth, min_child_weight, colsample_bytree, colsample_bylevel,
          alpha, lambda, discrepancy, dataset, default) |>
   filter(eta               == merged_xgb$eta[which(merged_xgb$default  == TRUE)[1]],
          subsample         == merged_xgb$subsample[which(merged_xgb$default  == TRUE)[1]],
@@ -261,7 +275,7 @@ xgb_alpha <- merged_xgb |>
 
 # lambda
 xgb_lambda <- merged_xgb |> 
-  select(model, eta, subsample, max_depth, min_child_weight, colsample_bytree, colsample_bylevel,
+  select(eta, subsample, max_depth, min_child_weight, colsample_bytree, colsample_bylevel,
          alpha, lambda, discrepancy, dataset, default) |>
   filter(eta               == merged_xgb$eta[which(merged_xgb$default  == TRUE)[1]],
          subsample         == merged_xgb$subsample[which(merged_xgb$default  == TRUE)[1]],
@@ -289,7 +303,12 @@ plot_xgb <- ggplot(xgb_disc, aes(x = fct_reorder(parameter, -max_disc), y = max_
   facet_grid(~ model) + 
   theme_bw() + 
   theme(legend.position = "none",
-        text = element_text(size = 20)) 
+        text = element_text(size = 20,
+                            family = "LM Roman 10"),
+        axis.text.x = element_text(family = "Courier",
+                                   size   = 10, 
+                                   angle  = 45, 
+                                   hjust  = 1)) 
 
 # svm ##########################################################################
 # Identify the default gamma value for each dataset
@@ -342,7 +361,12 @@ plot_svm <- ggplot(svm_disc, aes(x = fct_reorder(parameter, -max_disc), y = max_
   facet_grid(~ model) + 
   theme_bw() + 
   theme(legend.position = "none",
-        text = element_text(size = 20)) 
+        text = element_text(size = 20,
+                            family = "LM Roman 10"),
+        axis.text.x = element_text(family = "Courier",
+                                   size   = 10, 
+                                   angle  = 45, 
+                                   hjust  = 1)) 
 
 # ranger #######################################################################
 # Identify the default mtry value for each dataset
@@ -410,14 +434,18 @@ plot_ranger <- ggplot(ranger_disc, aes(x = fct_reorder(parameter, -max_disc), y 
   facet_grid(~ model) + 
   theme_bw() + 
   theme(legend.position = "none",
-        text = element_text(size = 20)) 
+        text = element_text(size = 20,
+                            family = "LM Roman 10"),
+        axis.text.x = element_text(family = "Courier",
+                                   size   = 10, 
+                                   angle  = 45, 
+                                   hjust  = 1))
 
 # combining plots
-merged_plot <- ggarrange(plot_glmnet, plot_knn, plot_ranger, plot_rpart, plot_svm, plot_xgb,
-                         ncol  = 2, 
-                         nrow  = 3,
-                         align = "h")
+merged_plot <- ggarrange(plot_glmnet, plot_rpart, plot_knn, plot_svm, plot_ranger, plot_xgb,
+                         ncol    = 2, 
+                         nrow    = 3,
+                         align   = "h")
 
 annotate_figure(merged_plot,
-                left   = text_grob("discrepancy", rot = 90, vjust = 1, size = 20),
-                bottom = text_grob("parameter", vjust = -0.5, size = 20))
+                left   = text_grob("discrepancy", rot = 90, vjust = 1, size = 20, family = "LM Roman 10"))
